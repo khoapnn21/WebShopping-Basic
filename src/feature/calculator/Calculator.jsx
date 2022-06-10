@@ -1,31 +1,49 @@
 import React  from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {calcButton, calcResult, calcBackSpace, calcClear} from './calculatorSlice'
+import {calcButton, calcResult, calcBackSpace, calcClear, calcPercent, calcMinusPlus } from './calculatorSlice'
 import './calculator.css'
 
 const Calculator = () => {
-    const number = useSelector(state => state.calc.number)
+    const number = useSelector(state => state.calc.number)    
+    console.log(number)
     const dispatch = useDispatch()
-    const ops = ['+', '-', '*', '/']
+    const ops = ['+', '-', '*', '/', '.']
 
-    const updateCalc = (value) => {
+    
+    const handleOpsDuplicate = (value) => {
         if( 
-            (ops.includes(value) && number ==='') ||
+            (ops.includes(value ) && number ==='') ||
             (ops.includes(value) && ops.includes(number.slice(-1)))
         ) {return}
         dispatch(calcButton(value))
     }
-    
-    
+    const handleButton = (value) => {
+        if(value === '0' && number ===''){
+            return number.slice(1)
+        }
+        dispatch(calcButton(value))
+    }
+
     return (
         <>
         <div className="container col-6" style={{backgroundColor: '#333', color: 'white', borderRadius: '10px'}}>
             <div className="row calcDisplay">
                     
-                {number || '0'}              
+                {number || '0' }              
             </div>
-           
+
+            
             <div className="row">
+                <div className="col" onClick={() => {
+                    dispatch(calcClear())
+                }}>
+                AC
+                </div>
+                <div className="col" onClick={() => {
+                    dispatch(calcBackSpace())
+                }}>
+                Del
+                </div>
                 <div className="col" onClick={() => {
                     dispatch(calcButton('(')) 
                    
@@ -38,38 +56,39 @@ const Calculator = () => {
                 }}>
                 )
                 </div>
-                <div className="col" onClick={() => {
-                    dispatch(calcClear())
+                <div className='col' onClick={() => {
+                    dispatch(calcMinusPlus(number))
+
                 }}>
-                AC
+                +/_
                 </div>
-                <div className="col" onClick={() => {
-                    dispatch(calcBackSpace())
+                <div className='col' onClick={() => {
+                   dispatch(calcPercent())
                 }}>
-                Del
+                %
                 </div>
+                
             </div>
             <div className="row">
                 <div className="col" onClick={() => {
-                    dispatch(calcButton('7'))
-                   
+                    handleButton('7')
                 }}>
                 7
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton('8'))
+                    handleButton('8')
                    
                 }}>
                 8
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(9))
+                    handleButton('9')
                    
                 }}>
                 9
                 </div>
                 <div className="col" onClick={() => {
-                    updateCalc('+')
+                    handleOpsDuplicate('+')
 
                 }}>
                 +
@@ -77,50 +96,50 @@ const Calculator = () => {
             </div>
             <div className="row">
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(4))
+                    handleButton('4')
                    
                 }}>
                 4
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(5))
+                    handleButton('5')
                    
                 }}>
                 5
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(6))
+                    handleButton('6')
                    
                 }}>
                 6
                 </div>
                 <div className="col" onClick={() => {
-                    updateCalc('-')
+                    handleOpsDuplicate('-')
                 }}>
                 -
                 </div>
             </div>
             <div className="row">
             <div className="col" onClick={() => {
-                    dispatch(calcButton(1))
+                    handleButton('1')
                    
                 }}>
                 1
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(2))
+                    handleButton('2')
                    
                 }}>
                 2
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(3))
+                    handleButton('3')
                    
                 }}>
                 3
                 </div>
                 <div className="col" onClick={() => {
-                    updateCalc('*')
+                    handleOpsDuplicate('*')
 
 
                 }}>
@@ -129,26 +148,23 @@ const Calculator = () => {
             </div>
             <div className="row">
                 <div className="col" onClick={() => {
-                    dispatch(calcButton(0))
-                   
+                    handleButton('0')
                 }}>
                 0
                 </div>
                 <div className="col" onClick={() => {
-                    dispatch(calcButton('.'))
-
-                   
+                    handleOpsDuplicate('.')
+    
                 }}>
                 .
                 </div>
                 <div className="col" onClick={() => {
                     dispatch(calcResult())
-                    
                 }}>
                 =
                 </div>
                 <div className="col" onClick={() => {
-                    updateCalc('/')
+                    handleOpsDuplicate('/')
                 }}>
                 /
                 </div>
